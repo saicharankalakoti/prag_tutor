@@ -1,0 +1,18 @@
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local API Keys and secrets
+keys
+
+# App generated files
+pdf_files/processed_files.json
+
+# Logs
+*.log

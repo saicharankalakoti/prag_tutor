@@ -1,4 +1,13 @@
 import re
+import nltk
+
+# Ensure NLTK resources are available
+for resource in ['stopwords', 'punkt', 'punkt_tab']:
+    try:
+        nltk.data.find(f'corpora/{resource}' if resource == 'stopwords' else f'tokenizers/{resource}')
+    except LookupError:
+        nltk.download(resource, quiet=True)
+
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 

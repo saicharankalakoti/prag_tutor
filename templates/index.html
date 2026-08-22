@@ -1,0 +1,470 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LPI Intelligent Tutor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0d14;
+      --surface: #111827;
+      --surface2: #1a2235;
+      --border: rgba(99,102,241,0.18);
+      --accent: #6366f1;
+      --accent2: #8b5cf6;
+      --accent3: #06b6d4;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --success: #10b981;
+      --glow: rgba(99,102,241,0.35);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(99,102,241,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(139,92,246,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 60% 30%, rgba(6,182,212,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+      gap: 32px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      animation: fadeDown 0.7s ease both;
+    }
+    .header .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 12px;
+      color: #a5b4fc;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .header h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #a5b4fc, #c4b5fd, #67e8f9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .header p {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Ask Card */
+    .ask-card {
+      width: 100%;
+      max-width: 780px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.4), 0 0 80px rgba(99,102,241,0.05);
+      animation: fadeUp 0.7s ease 0.1s both;
+      backdrop-filter: blur(12px);
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      background: var(--surface2);
+      border: 1.5px solid rgba(99,102,241,0.2);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 14px 16px;
+      resize: vertical;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      outline: none;
+    }
+    textarea::placeholder { color: #475569; }
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+    }
+
+    /* Level pills */
+    .level-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .level-pill {
+      position: relative;
+    }
+    .level-pill input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .level-pill label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      padding: 9px 20px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(99,102,241,0.25);
+      background: var(--surface2);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .level-pill label:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      background: rgba(99,102,241,0.1);
+    }
+    .level-pill input:checked + label {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+    }
+
+    /* Ask button */
+    .btn-ask {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 60%, var(--accent3) 100%);
+      color: #fff;
+      letter-spacing: 0.03em;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .btn-ask:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(99,102,241,0.55);
+    }
+    .btn-ask:active:not(:disabled) { transform: translateY(0); }
+    .btn-ask:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Spinner */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    /* Response section */
+    .response-section {
+      width: 100%;
+      max-width: 780px;
+      animation: fadeUp 0.5s ease both;
+      display: none;
+    }
+    .response-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .response-header .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+      animation: pulse 1.5s ease infinite;
+    }
+    .response-header span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .response-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.3);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    /* Markdown styles inside response box */
+    .response-box h1, .response-box h2, .response-box h3 {
+      font-weight: 700;
+      margin: 20px 0 10px;
+      color: #c4b5fd;
+    }
+    .response-box h1 { font-size: 1.6em; }
+    .response-box h2 { font-size: 1.3em; border-bottom: 1px solid rgba(99,102,241,0.2); padding-bottom: 6px; }
+    .response-box h3 { font-size: 1.1em; }
+    .response-box p { margin-bottom: 14px; color: var(--text); }
+    .response-box strong { color: #a5b4fc; font-weight: 600; }
+    .response-box em { color: #67e8f9; }
+    .response-box ul, .response-box ol { margin: 10px 0 14px 24px; }
+    .response-box li { margin-bottom: 6px; }
+    .response-box code {
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 5px;
+      padding: 2px 7px;
+      font-size: 13px;
+      color: #67e8f9;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    .response-box pre {
+      border-radius: 12px;
+      overflow: auto;
+      margin: 16px 0;
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+    .response-box pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      color: inherit;
+    }
+    .response-box table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .response-box th {
+      background: rgba(99,102,241,0.2);
+      color: #a5b4fc;
+      font-weight: 600;
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+    .response-box td {
+      padding: 9px 14px;
+      border: 1px solid rgba(99,102,241,0.12);
+      color: var(--text);
+    }
+    .response-box tr:hover td { background: rgba(99,102,241,0.05); }
+    .response-box hr {
+      border: none;
+      border-top: 1px solid rgba(99,102,241,0.2);
+      margin: 24px 0;
+    }
+    .response-box blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 4px 16px;
+      color: var(--muted);
+      font-style: italic;
+      margin: 12px 0;
+    }
+
+    /* Error */
+    .error-box {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 12px;
+      padding: 16px 20px;
+      color: #fca5a5;
+      font-size: 14px;
+    }
+
+    /* Animations */
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px);  } to { opacity:1; transform:translateY(0); } }
+    @keyframes spin     { to { transform: rotate(360deg); } }
+    @keyframes pulse    { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+    /* Footer */
+    .footer {
+      color: #334155;
+      font-size: 13px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Powered by Groq AI
+      </div>
+      <h1>LPI Intelligent Tutor</h1>
+      <p>Ask any question from the course material and get an instant, level-tailored explanation.</p>
+    </header>
+
+    <!-- Ask Card -->
+    <div class="ask-card">
+      <div class="form-group">
+        <label>Your Question</label>
+        <textarea id="questionInput" placeholder="e.g. What is Git? How does git diff work? Explain branches..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Explanation Level</label>
+        <div class="level-group">
+          <div class="level-pill">
+            <input type="radio" name="level" id="lvl-beginner" value="beginner" checked />
+            <label for="lvl-beginner">🌱 Beginner</label>
+          </div>
+          <div class="level-pill">
+            <input type="radio" name="level" id="lvl-intermediate" value="intermediate" />
+            <label for="lvl-intermediate">⚡ Intermediate</label>
+          </div>
+          <div class="level-pill">
+            <input type="radio" name="level" id="lvl-expert" value="expert" />
+            <label for="lvl-expert">🚀 Expert</label>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-ask" id="askBtn" onclick="askQuestion()">
+        <div class="spinner" id="spinner"></div>
+        <span id="btnText">Ask the Tutor</span>
+      </button>
+    </div>
+
+    <!-- Response -->
+    <div class="response-section" id="responseSection">
+      <div class="response-header">
+        <div class="dot"></div>
+        <span>Tutor Response</span>
+      </div>
+      <div class="response-box" id="responseBox"></div>
+    </div>
+
+    <div class="footer">LPI Intelligent Tutor &nbsp;·&nbsp; Built with Flask + Groq + Pinecone</div>
+
+  </div>
+
+  <script>
+    async function askQuestion() {
+      const question = document.getElementById("questionInput").value.trim();
+      const level = document.querySelector('input[name="level"]:checked').value;
+
+      if (!question) {
+        document.getElementById("questionInput").focus();
+        return;
+      }
+
+      // UI: loading state
+      const btn = document.getElementById("askBtn");
+      const spinner = document.getElementById("spinner");
+      const btnText = document.getElementById("btnText");
+      const responseSection = document.getElementById("responseSection");
+      const responseBox = document.getElementById("responseBox");
+
+      btn.disabled = true;
+      spinner.style.display = "block";
+      btnText.textContent = "Thinking...";
+      responseSection.style.display = "none";
+
+      try {
+        const res = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question, level })
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          responseBox.innerHTML = `<div class="error-box">⚠️ ${data.error}</div>`;
+        } else {
+          // Render markdown
+          responseBox.innerHTML = marked.parse(data.response);
+          // Highlight code blocks
+          responseBox.querySelectorAll("pre code").forEach(el => hljs.highlightElement(el));
+        }
+
+        responseSection.style.display = "block";
+        setTimeout(() => responseSection.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+
+      } catch (err) {
+        responseBox.innerHTML = `<div class="error-box">⚠️ Failed to connect to the server. Please try again.</div>`;
+        responseSection.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        spinner.style.display = "none";
+        btnText.textContent = "Ask the Tutor";
+      }
+    }
+
+    // Allow Ctrl+Enter to submit
+    document.getElementById("questionInput").addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") askQuestion();
+    });
+  </script>
+</body>
+</html>
