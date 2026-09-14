@@ -63,7 +63,9 @@ def main():
 
     # Phase 3: Response Generation
     response_generator = ResponseGenerator(vector_db_api_key=pinecone_api_key, llm_api_key=groq_api_key)
-    response = response_generator.respond_to_user(query_embedding, processed_query_data["level"])
+    response = response_generator.respond_to_user(
+        query_embedding, processed_query_data["level"], user_question=user_query
+    )
 
     # Output the final response
     print("\nIntelligent Tutor Response:")

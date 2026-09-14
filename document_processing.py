@@ -8,8 +8,12 @@ class DocumentProcessor:
     def __init__(self, pdf_dir, vector_db_api_key, model_name="sentence-transformers/all-MiniLM-L6-v2"):
         self.pdf_dir = pdf_dir
         self.model = SentenceTransformer(model_name)
-        pc = pinecone.Pinecone(api_key=vector_db_api_key)
-        self.index = pc.Index("intelligent-tutor")  
+        try:
+            pc = pinecone.Pinecone(api_key=vector_db_api_key)
+            self.index = pc.Index("intelligent-tutor")
+        except Exception as e:
+            print(f"[Error] Failed to connect to Pinecone index: {e}")
+            self.index = None  
 
     def read_pdf(self, pdf_file):
         text_content = ""
@@ -24,6 +28,9 @@ class DocumentProcessor:
         return sentences, embeddings
 
     def upload_to_vector_db(self):
+        if self.index is None:
+            print("[Warning] Pinecone index is not initialized. Skipping vector upload.")
+            return
         if not os.path.exists(self.pdf_dir):
             os.makedirs(self.pdf_dir)
         pdf_files = [f for f in os.listdir(self.pdf_dir) if f.endswith(".pdf")]

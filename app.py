@@ -78,7 +78,9 @@ def ask():
 
     processed = query_processor.process_query(user_query, level)
     query_embedding = embedding_model.encode(processed["query"])
-    response = response_generator.respond_to_user(query_embedding, processed["level"])
+    response = response_generator.respond_to_user(
+        query_embedding, processed["level"], user_question=user_query
+    )
     return jsonify({"response": response})
 
 
