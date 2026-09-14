@@ -1,4 +1,6 @@
+
 import os
+
 from groq import Groq
 from sentence_transformers import util
 import pinecone

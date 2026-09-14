@@ -1,0 +1,86 @@
+{
+  "prerequisites": {
+    "Introduction to Data Structures": [],
+    "Classification of Data Structures": [
+      "Introduction to Data Structures"
+    ],
+    "Operations on Data Structures": [
+      "Introduction to Data Structures"
+    ],
+    "Algorithms": [],
+    "Recursion": [
+      "Algorithms"
+    ],
+    "Arrays": [],
+    "Array Operations": [
+      "Arrays"
+    ],
+    "Array Memory Representation": [
+      "Arrays"
+    ],
+    "Sorting Techniques": [
+      "Arrays"
+    ],
+    "Bubble Sort": [
+      "Sorting Techniques"
+    ],
+    "Selection Sort": [
+      "Sorting Techniques"
+    ],
+    "Searching Algorithms": [
+      "Arrays"
+    ],
+    "Linear Search": [
+      "Searching Algorithms"
+    ],
+    "Binary Search": [
+      "Searching Algorithms",
+      "Sorting Techniques"
+    ],
+    "Heap": [
+      "Binary Tree"
+    ],
+    "Heap Operations": [
+      "Heap"
+    ],
+    "Stack": [],
+    "Stack Operations": [
+      "Stack"
+    ],
+    "Queue": [],
+    "Queue Operations": [
+      "Queue"
+    ],
+    "Circular Queue": [
+      "Queue"
+    ],
+    "Linked Lists": [],
+    "Singly Linked List": [
+      "Linked Lists"
+    ],
+    "Doubly Linked List": [
+      "Singly Linked List"
+    ],
+    "Circular Linked List": [
+      "Linked Lists"
+    ],
+    "Trees": [],
+    "Binary Tree": [
+      "Trees"
+    ],
+    "Binary Search Tree": [
+      "Binary Tree"
+    ],
+    "Binary Tree Traversal": [
+      "Binary Tree",
+      "Recursion"
+    ],
+    "AVL Tree": [
+      "Binary Search Tree"
+    ],
+    "B-Tree": [
+      "Trees",
+      "Binary Search Tree"
+    ]
+  }
+}
